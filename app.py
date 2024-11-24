@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 import requests
@@ -67,7 +70,7 @@ def generate_prompt():
 
     try:
         # Make API Request
-        response = requests.post(API_URL, headers=HEADERS, json=payload)
+        response = requests.post(API_URL, headers=HEADERS, json=payload, verify=False)
         if response.status_code == 200:
             response_data = response.json()
             response_data["risk_tolerance"] = risk_tolerance
@@ -98,7 +101,7 @@ def handle_message(data):
 
     try:
         # Make API Request
-        response = requests.post(API_URL, headers=HEADERS, json=payload)
+        response = requests.post(API_URL, headers=HEADERS, json=payload, verify=False)
         if response.status_code == 200:
             response_data = response.json()
             ai_message = response_data.get("response", "Sorry, no response.")
