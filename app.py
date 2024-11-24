@@ -3,9 +3,10 @@ eventlet.monkey_patch()
 
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
-import requests
-from dotenv import load_dotenv
+import eventlet.green.httplib as httplib  # Use eventlet's greened httplib
+import json
 import os
+from dotenv import load_dotenv
 
 if os.getenv("RENDER") is None:  # Load .env only in local development
     load_dotenv()
@@ -24,11 +25,9 @@ HEADERS = {
     "x-api-key": API_KEY
 }
 
-
 @app.route('/')
 def home():
     return render_template('index.html')
-
 
 @app.route('/generate-prompt', methods=['POST'])
 def generate_prompt():
@@ -50,7 +49,7 @@ def generate_prompt():
     Specific preferences or stocks I would like to include: {specific_stocks}.
 
     Can you create an investment strategy for me, considering current market trends?
-
+    
     Extract and format the following investment recommendation into a structured JSON format. 
     No special formatting is required like ###,##,/n etc. Json should be in plain text. 
     Ensure the JSON contains:
@@ -61,26 +60,28 @@ def generate_prompt():
     """
 
     # API Payload
-    payload = {
+    payload = json.dumps({
         "user_id": USER_ID,
         "agent_id": AGENT_ID,
         "session_id": SESSION_ID,
         "message": prompt.strip()
-    }
+    })
 
     try:
-        # Make API Request
-        response = requests.post(API_URL, headers=HEADERS, json=payload, verify=False)
-        if response.status_code == 200:
-            response_data = response.json()
+        # Make API Request using eventlet's greened httplib
+        connection = httplib.HTTPSConnection(API_URL)
+        connection.request("POST", "/your-endpoint", body=payload, headers=HEADERS)
+        response = connection.getresponse()
+        if response.status == 200:
+            response_data = json.loads(response.read())
             response_data["risk_tolerance"] = risk_tolerance
             response_data["financial_goals"] = financial_goals
             response_data["timeline"] = timeline
             response_data["initial_investment"] = initial_investment
             return jsonify(response_data)
         else:
-            return jsonify({"error": "API request failed", "details": response.text}), 500
-    except requests.exceptions.RequestException as e:
+            return jsonify({"error": "API request failed", "details": response.read()}), 500
+    except Exception as e:
         return jsonify({"error": "API request failed", "details": str(e)}), 500
 
 
@@ -92,25 +93,26 @@ def result_page():
 @socketio.on('send_message')
 def handle_message(data):
     user_message = data.get("message", "")
-    payload = {
+    payload = json.dumps({
         "user_id": USER_ID,
         "agent_id": AGENT_ID,
         "session_id": SESSION_ID,
         "message": user_message.strip()
-    }
+    })
 
     try:
-        # Make API Request
-        response = requests.post(API_URL, headers=HEADERS, json=payload, verify=False)
-        if response.status_code == 200:
-            response_data = response.json()
+        # Make API Request using eventlet's greened httplib
+        connection = httplib.HTTPSConnection(API_URL)
+        connection.request("POST", "/your-endpoint", body=payload, headers=HEADERS)
+        response = connection.getresponse()
+        if response.status == 200:
+            response_data = json.loads(response.read())
             ai_message = response_data.get("response", "Sorry, no response.")
             emit('receive_message', {'message': ai_message, 'sender': 'ai'})
         else:
             emit('receive_message', {'message': 'API request failed.', 'sender': 'error'})
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         emit('receive_message', {'message': str(e), 'sender': 'error'})
-
 
 if __name__ == '__main__':
     socketio.run(app)
