@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthWise - Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+<body>
+<header>
+    <h1>Your Personalized Portfolio Strategy</h1>
+    <p>Smart Choices. Stronger Futures :)</p>
+</header>
+
+<div id="user-box-id" class="userdata-box-container">
+    <div class="userdata-box">
+        <div class="icon">🎯</div>
+        <div>
+            <strong>Risk Tolerance:</strong>
+            <p id="riskTolerance"></p>
+        </div>
+    </div>
+    <div class="userdata-box">
+        <div class="icon">🏆</div>
+        <div>
+            <strong>Financial Goals:</strong>
+            <p id="financialGoals"></p>
+        </div>
+    </div>
+    <div class="userdata-box">
+        <div class="icon">⏳</div>
+        <div>
+            <strong>Timeline:</strong>
+            <p id="timeline"></p>
+        </div>
+    </div>
+    <div class="userdata-box">
+        <div class="icon">💰</div>
+        <div>
+            <strong>Initial Investment:</strong>
+            <p id="initialInvestment"></p>
+        </div>
+    </div>
+</div>
+
+<main>
+    <section style="display: flex; gap: 20px; align-items: flex-start;">
+        <canvas id="portfolioPieChart" style="max-width: 30em; max-height: 30em;"></canvas>
+        <div id="recommendationsBox"
+             style="flex: 1; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <h3>Specific Recommendations</h3>
+            <p>Click on a section of the pie chart to see details here.</p>
+        </div>
+    </section>
+
+    <section id="infoBoxes">
+        <!-- Info boxes will be dynamically added here -->
+    </section>
+
+    <div class="chat-header">
+        Ask Any Specific Queries:
+    </div>
+
+    <div class="chat-container">
+        <div id="chat-window" class="chat-window">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="user-input" placeholder="Type your message here...">
+            <button id="send-button">
+                <i class="send-icon">&#x27A4;</i>
+            </button>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2024 WealthWise. All rights reserved.
+</footer>
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
+<script src="{{ url_for('static', filename='portfolio.js') }}" defer></script>
+</body>
+</html>
+
+

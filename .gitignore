@@ -1,0 +1,31 @@
+# Byte-compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Environment files
+.env
+
+# Virtual environment
+venv/
+env/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+
+# Log files
+*.log
+
+# Flask instance and static files
+instance/
+static/.webassets-cache/
+
+# Database files
+*.sqlite3
+*.db
+
+# Other OS-specific files
+.DS_Store
+Thumbs.db

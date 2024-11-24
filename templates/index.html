@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthWise</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <h1>WealthWise</h1>
+        <p>Smart Choices. Stronger Futures :)</p>
+    </header>
+    <div class="container">
+        <form id="portfolio-form" method="POST" action="/generate-prompt">
+            <div class="form-group">
+                <label for="age">Your Age</label>
+                <input type="number" id="age" name="age" placeholder="Enter your age" min="18" required>
+            </div>
+            <div class="form-group">
+                <label for="risk-tolerance">Risk Tolerance</label>
+                <select id="risk-tolerance" name="risk-tolerance">
+                    <option value="conservative">Conservative</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="aggressive">Aggressive</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="financial-goals">Financial Goals</label>
+                <select id="financial-goals" name="financial-goals">
+                    <option value="retirement">Retirement</option>
+                    <option value="education">Education</option>
+                    <option value="wealth-accumulation">Wealth Accumulation</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="timeline">Timeline (Years)</label>
+                <select id="timeline" name="timeline">
+                    <option value="short-term">Short-Term (0-5 years)</option>
+                    <option value="medium-term">Medium-Term (5-20 years)</option>
+                    <option value="long-term">Long-Term (20+ years)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="initial-investment">Initial Investment Amount </label>
+                <input type="number" id="initial-investment" name="initial-investment" placeholder="Enter your initial investment amount" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="financial-standing">Current Financial Standing</label>
+                <textarea id="financial-standing" name="financial-standing" rows="4" placeholder="Describe your income, expenses, savings, and debt levels..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="specific-stocks">Any Specific Things?</label>
+                <input type="text" id="specific-stocks" name="specific-stocks" placeholder="Enter any specific stocks or preferences">
+            </div>
+            <button type="submit">Generate Portfolio</button>
+        </form>
+    </div>
+     <div id="progress-bar-container" style="display: none;">
+        <div id="progress-bar"></div>
+    </div>
+    <footer>
+        &copy; 2024 WealthWise. All rights reserved.
+    </footer>
+</body>
+</html>
